@@ -1,5 +1,6 @@
 import express from "express"
 import School from "../models/school-model.js"
+import {calDistance} from "../controllers/route-controller.js"
 const router = express.Router()
 router.post('/addSchool',async(req,res)=>{
          try{
@@ -20,23 +21,6 @@ router.get('/listSchools',async(req,res)=>{
           if(!latitude||!longitude){
             return res.status(400).json({error:"Latitude and Longitude are required"});
           }
-        
-          const calDistance = (lat1, lon1, lat2, lon2) => {
-            const toRad = (angle) => (angle * Math.PI) / 180
-            const R = 6371 
-        
-            const dLat = toRad(lat2 - lat1)
-            const dLon = toRad(lon2 - lon1)
-        
-            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2)
-        
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-            return R * c; 
-        };
-        
-        console.log(calDistance(28.7041, 77.1025, 34.0522, -118.2437))
         const schools= await School.find({})
         const sortedSchools = schools.map(school => {
             let schoolObj = school.toObject() // Convert to Plain Obj
